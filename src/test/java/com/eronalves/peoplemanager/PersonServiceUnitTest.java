@@ -1,8 +1,10 @@
 package com.eronalves.peoplemanager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +43,46 @@ public class PersonServiceUnitTest {
         assertNotNull(personCreated.getId());
         assertEquals(LocalDate.of(1996, Month.OCTOBER, 01), person.getBirthDate());
         assertNull(personCreated.getAdress());
+    }
+
+    @Test
+    public void updatePersonById() throws Exception{
+        Person personTested = new Person("Eron Alves", LocalDate.of(1996, Month.OCTOBER, 01));
+        personTested.setId(1);
+
+        when(repository.save(any())).thenReturn(personTested);
+
+        Person person = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
+        person.setId(1);
+        person.setName("Eron Alves");
+
+        Person personUpdated = service.updatePersonById(person.getId(), person);
+        assertNotEquals("Eron",personUpdated.getName());
+    }
+
+    @Test
+    public void updatePersonById_whenIdIsNotOnObject_thenUpdateSuccesfull() throws Exception{
+        Person personTested = new Person("Eron Alves", LocalDate.of(1996, Month.OCTOBER, 01));
+        personTested.setId(1);
+
+        Person person = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
+        person.setName("Eron Alves");
+
+        when(repository.save(personTested)).thenReturn(personTested);
+
+
+        Person personUpdated = service.updatePersonById(1, person);
+        assertNotNull(personUpdated.getId());
+        assertNotEquals("Eron",personUpdated.getName());
+    }
+
+    @Test
+    public void updatePersonById_whenIdOnObjectIsDifferentFromIdPassedAsArgument_thenThrowError(){
+        Person personTested = new Person("Eron Alves", LocalDate.of(1996, Month.OCTOBER, 01));
+        personTested.setId(1);
+        assertThrows(Exception.class, ()->{
+            service.updatePersonById(2, personTested);
+        });
     }
 
 
