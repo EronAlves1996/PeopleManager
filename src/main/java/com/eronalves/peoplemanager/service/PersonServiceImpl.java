@@ -19,4 +19,11 @@ public class PersonServiceImpl implements PersonService {
         return repository.save(person);
     }
 
+    @Override
+    public Person updatePersonById(int id, Person person) throws Exception {
+        if(person.getId() == null) person.setId(id);
+        if(person.getId() != id) throw new Exception("Inconsistent Id information");
+        return repository.save(person);
+    }
+
 }
