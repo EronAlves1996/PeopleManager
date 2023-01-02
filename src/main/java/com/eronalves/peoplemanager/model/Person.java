@@ -1,41 +1,43 @@
 package com.eronalves.peoplemanager.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Month;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-public class People {
+public class Person {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
 
     @Temporal(TemporalType.DATE)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Embedded
     private Address adress;
 
-    public People(int id, String name, Date birthDate, Address adress) {
-        this.id = id;
+    public Person(String name, LocalDate birthDate) {
         this.name = name;
         this.birthDate = birthDate;
-        this.adress = adress;
     }
 
-    public People(){}
+    public Person(){}
 
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
-        id = id;
+        this.id = id;
     }
 
     public String getName() {
@@ -46,12 +48,12 @@ public class People {
         this.name = name;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthDate(int year, Month month, int day) {
+        this.birthDate = LocalDate.of(year, month, day);
     }
 
     public Address getAdress() {
