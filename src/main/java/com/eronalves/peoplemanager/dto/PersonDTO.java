@@ -10,6 +10,9 @@ public class PersonDTO {
         this.birthDate = birthDate;
     }
 
+    public PersonDTO() {
+    }
+
     public String getName() {
         return name;
     }
