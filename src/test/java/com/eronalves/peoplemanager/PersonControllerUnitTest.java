@@ -64,4 +64,17 @@ public class PersonControllerUnitTest {
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
     }
 
+    @Test
+    public void testUpdatePerson() throws Exception {
+        personDTO.setBirthDate("01/02/1994");
+        person.setBirthDate(LocalDate.of(1994, Month.FEBRUARY, 01));
+        when(service.updatePersonById(1, DTOMapper.dtoToPerson(personDTO))).thenReturn(person);
+
+        ResponseEntity<Person> response = controller.updatePerson(1, personDTO);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        Person personUpdated = response.getBody();
+        assertNotNull(personUpdated);
+    }
+
 }
