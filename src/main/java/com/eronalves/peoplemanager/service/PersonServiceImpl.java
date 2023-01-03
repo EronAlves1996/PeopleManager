@@ -16,13 +16,17 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person createPerson(Person person) {
-        return repository.save(person);
+        return persistOnDatabase(person);
     }
 
     @Override
     public Person updatePersonById(int id, Person person) throws Exception {
         if(person.getId() == null) person.setId(id);
         if(person.getId() != id) throw new Exception("Inconsistent Id information");
+        return persistOnDatabase(person);
+    }
+
+    public Person persistOnDatabase(Person person){
         return repository.save(person);
     }
 
