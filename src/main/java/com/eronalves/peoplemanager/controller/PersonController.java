@@ -92,7 +92,8 @@ public class PersonController {
         }
     }
 
-    public ResponseEntity<Address> getMainAddressBypersonId(int id) {
+    @GetMapping("/address/main/{id}")
+    public ResponseEntity<Address> getMainAddressBypersonId(@PathVariable("id") int id) {
         try {
             Address mainAddressByPersonId = service.getMainAddressByPersonId(id);
             return ResponseEntity.ok(mainAddressByPersonId);
