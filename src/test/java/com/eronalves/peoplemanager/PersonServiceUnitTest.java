@@ -150,5 +150,10 @@ public class PersonServiceUnitTest {
     }
 
     @Test
+    public void seeMainAdressByPerson() throws Exception{
+        createTwoAddresses_whenSettingTheTwoForMain_thenTheLastCreatedIsTheMain();
+        Address address = service.getMainAddressByPersonId(1);
+        assertEquals("Lugar nenhum", address.getCity());
+    }
 
 }
