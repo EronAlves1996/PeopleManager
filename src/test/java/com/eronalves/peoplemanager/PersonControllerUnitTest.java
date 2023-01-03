@@ -19,8 +19,10 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import com.eronalves.peoplemanager.controller.PersonController;
+import com.eronalves.peoplemanager.dto.AddressDTO;
 import com.eronalves.peoplemanager.dto.DTOMapper;
 import com.eronalves.peoplemanager.dto.PersonDTO;
+import com.eronalves.peoplemanager.model.Address;
 import com.eronalves.peoplemanager.model.Person;
 import com.eronalves.peoplemanager.service.PersonService;
 
@@ -98,8 +100,30 @@ public class PersonControllerUnitTest {
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
         List<Person> persons = response.getBody();
-
+        assertNotNull(persons);
         assertNotEquals(0, persons.size());
+    }
+
+    @Test
+    public void testAddAddressByPersonId() throws Exception {
+        AddressDTO addressDTO = new AddressDTO("Rua dos bobos", "00000-000", "0", "Lugar Nenhum", true);
+        person.addAdress(DTOMapper.dtoToAddress(addressDTO));
+
+        when(service.createAddressForPersonById(1, DTOMapper.dtoToAddress(addressDTO))).thenReturn(person);
+
+        ResponseEntity<List<Address>> response = controller.addAddressForPerson(1, addressDTO);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        List<Address> addressList = response.getBody();
+
+        assertNotNull(addressList);
+        assertEquals(1, addressList.size());
+    }
+
+    @Test
+    public void testGetAllAdressesFromPersonId() throws Exception {
+        testAddAddressByPersonId();
+        ResponseEntity<List<Address>> response = controller.getAllAddressFromPerson(1);
     }
 
 }
