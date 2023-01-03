@@ -16,4 +16,6 @@ public interface PersonService {
     List<Person> getAllPersons();
 
     Person createAddressForPersonById(int id, Address address) throws Exception;
+
+    List<Address> getPersonsAdressByPersonId(int id) throws Exception;
 }

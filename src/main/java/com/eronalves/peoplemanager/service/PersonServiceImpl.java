@@ -59,4 +59,9 @@ public class PersonServiceImpl implements PersonService {
         person.addAdress(address);
         return updatePersonById(id, person);
     }
+
+    @Override
+    public List<Address> getPersonsAdressByPersonId(int id) throws Exception {
+        return getPersonById(id).getAdresses();
+    }
 }
