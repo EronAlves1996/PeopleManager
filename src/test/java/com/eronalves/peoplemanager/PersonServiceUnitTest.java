@@ -5,11 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,12 +40,13 @@ public class PersonServiceUnitTest {
 		personTested.setId(1);
 		person = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
         when(repository.save(any())).thenReturn(personTested);
+        when(repository.findById(1)).thenReturn(Optional.of(personTested));
 	}
 
 	@Test
 	public void createPerson() {
 		Person personCreated = service.createPerson(person);
-        
+
 		assertNotNull(personCreated.getId());
 		assertEquals(LocalDate.of(1996, Month.OCTOBER, 01), person.getBirthDate());
 		assertNull(personCreated.getAdress());
@@ -79,5 +82,16 @@ public class PersonServiceUnitTest {
 			service.updatePersonById(2, personTested);
 		});
 	}
+
+    @Test
+    public void getPersonById() throws Exception{
+        Person person = service.getPersonById(1);
+        assertNotNull(person);
+    }
+
+    @Test
+    public void getPersonById_whenItNotExists() throws Exception{
+        assertThrows(Exception.class, ()->service.getPersonById(2));
+    }
 
 }
