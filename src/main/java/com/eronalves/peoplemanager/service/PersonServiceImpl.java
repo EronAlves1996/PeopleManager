@@ -1,5 +1,7 @@
 package com.eronalves.peoplemanager.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.eronalves.peoplemanager.model.Person;
@@ -28,6 +30,13 @@ public class PersonServiceImpl implements PersonService {
 
     public Person persistOnDatabase(Person person){
         return repository.save(person);
+    }
+
+    @Override
+    public Person getPersonById(int id) throws Exception {
+        Optional<Person> personOpt = repository.findById(id);
+        if(personOpt.isPresent()) return personOpt.get();
+        throw new Exception("Person not finded");
     }
 
 }
