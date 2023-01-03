@@ -28,92 +28,93 @@ import com.eronalves.peoplemanager.service.PersonService;
 @SpringBootTest
 public class PersonServiceUnitTest {
 
-	@MockBean
-	PersonRepository repository;
-    
-	@Autowired
-	PersonService service;
-	private Person personTested;
-	private Person person;
+    @MockBean
+    PersonRepository repository;
+
+    @Autowired
+    PersonService service;
+    private Person personTested;
+    private Person person;
     private Address address;
-    
-	@BeforeEach
-	public void initializePersons() {
-        personTested = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
-		personTested.setId(1);
-        person = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
-	}
-    
+
     @BeforeEach
-    public void initializeAddress(){
+    public void initializePersons() {
+        personTested = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
+        personTested.setId(1);
+        person = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
+    }
+
+    @BeforeEach
+    public void initializeAddress() {
         address = new Address("Rua dos bobos", "10000-000", "0", "Esmero", true);
     }
-    
+
     @BeforeEach
     public void makeMocks(){
         when(repository.save(any())).thenReturn(personTested);
         when(repository.findById(1)).thenReturn(Optional.of(personTested));
+        when(repository.existsById(1)).thenReturn(true);
         when(repository.findAll()).thenReturn(Arrays.asList(personTested));
     }
 
-	@Test
-	public void createPerson() {
-		Person personCreated = service.createPerson(person);
+    @Test
+    public void createPerson() {
+        Person personCreated = service.createPerson(person);
 
-		assertNotNull(personCreated.getId());
-		assertEquals(LocalDate.of(1996, Month.OCTOBER, 01), person.getBirthDate());
-		assertEquals(0, personCreated.getAdresses().size());
-	}
-
-	@Test
-	public void updatePersonById() throws Exception {
-		personTested.setName("Eron Alves");
-
-		person.setId(1);
-		person.setName("Eron Alves");
-
-		Person personUpdated = service.updatePersonById(person.getId(), person);
-		assertNotEquals("Eron", personUpdated.getName());
-	}
-
-	@Test
-	public void updatePersonById_whenIdIsNotOnObject_thenUpdateSuccesfull() throws Exception {
-		personTested.setName("Eron Alves");
-
-		person.setName("Eron Alves");
-
-		Person personUpdated = service.updatePersonById(1, person);
-		assertNotNull(personUpdated.getId());
-		assertNotEquals("Eron", personUpdated.getName());
-	}
-
-	@Test
-	public void updatePersonById_whenIdOnObjectIsDifferentFromIdPassedAsArgument_thenThrowError() {
-		personTested.setName("Eron Alves");
-
-		assertThrows(Exception.class, () -> {
-			service.updatePersonById(2, personTested);
-		});
-	}
+        assertNotNull(personCreated.getId());
+        assertEquals(LocalDate.of(1996, Month.OCTOBER, 01), person.getBirthDate());
+        assertEquals(0, personCreated.getAdresses().size());
+    }
 
     @Test
-    public void getPersonById() throws Exception{
+    public void updatePersonById() throws Exception {
+        personTested.setName("Eron Alves");
+
+        person.setId(1);
+        person.setName("Eron Alves");
+
+        Person personUpdated = service.updatePersonById(person.getId(), person);
+        assertNotEquals("Eron", personUpdated.getName());
+    }
+
+    @Test
+    public void updatePersonById_whenIdIsNotOnObject_thenUpdateSuccesfull() throws Exception {
+        personTested.setName("Eron Alves");
+
+        person.setName("Eron Alves");
+
+        Person personUpdated = service.updatePersonById(1, person);
+        assertNotNull(personUpdated.getId());
+        assertNotEquals("Eron", personUpdated.getName());
+    }
+
+    @Test
+    public void updatePersonById_whenIdOnObjectIsDifferentFromIdPassedAsArgument_thenThrowError() {
+        personTested.setName("Eron Alves");
+
+        assertThrows(Exception.class, () -> {
+            service.updatePersonById(2, personTested);
+        });
+    }
+
+    @Test
+    public void getPersonById() throws Exception {
         Person person = service.getPersonById(1);
         assertNotNull(person);
     }
 
     @Test
-    public void getPersonById_whenItNotExists() throws Exception{
-        assertThrows(Exception.class, ()->service.getPersonById(2));
+    public void getPersonById_whenItNotExists() throws Exception {
+        assertThrows(Exception.class, () -> service.getPersonById(2));
     }
 
     @Test
-    public void getAllPersons(){
+    public void getAllPersons() {
         assertEquals(Arrays.asList(personTested), service.getAllPersons());
     }
 
     @Test
-    public void createAddressForPersonById() throws Exception{
+    public void createAddressForPersonById() throws Exception {
         Person person = service.createAddressForPersonById(1, address);
         List<Address> addressCreated = person.getAdresses();
         assertNotNull(addressCreated);
@@ -123,34 +124,34 @@ public class PersonServiceUnitTest {
 
     @Test
     public void createAddressForPersonById_whenItNotExists_thenThrowException() {
-        assertThrows(Exception.class, ()->service.createAddressForPersonById(2, address));        
+        assertThrows(Exception.class, () -> service.createAddressForPersonById(2, address));
     }
 
     @Test
-    public void createTwoAddresses_whenSettingTheTwoForMain_thenTheLastCreatedIsTheMain() throws Exception{
+    public void createTwoAddresses_whenSettingTheTwoForMain_thenTheLastCreatedIsTheMain() throws Exception {
         createAddressForPersonById();
-        Address address2 = new Address("Rua dois", "11111-111", "26", "Lugar nenhum",true);
+        Address address2 = new Address("Rua dois", "11111-111", "26", "Lugar nenhum", true);
         Person person = service.createAddressForPersonById(1, address2);
 
         List<Address> adressesAsMain = person
-            .getAdresses()
-            .stream()
-            .filter(address -> address.isMainAddress())
-            .collect(Collectors.toList());
+                .getAdresses()
+                .stream()
+                .filter(address -> address.isMainAddress())
+                .collect(Collectors.toList());
 
-        assertEquals(1,adressesAsMain.size());
+        assertEquals(1, adressesAsMain.size());
         assertEquals("Lugar nenhum", adressesAsMain.get(0).getCity());
     }
 
     @Test
-    public void seeAllAddressByPerson() throws Exception{
+    public void seeAllAddressByPerson() throws Exception {
         createTwoAddresses_whenSettingTheTwoForMain_thenTheLastCreatedIsTheMain();
         List<Address> adresses = service.getPersonsAdressByPersonId(1);
         assertEquals(2, adresses.size());
     }
 
     @Test
-    public void seeMainAdressByPerson() throws Exception{
+    public void seeMainAdressByPerson() throws Exception {
         createTwoAddresses_whenSettingTheTwoForMain_thenTheLastCreatedIsTheMain();
         Address address = service.getMainAddressByPersonId(1);
         assertEquals("Lugar nenhum", address.getCity());
