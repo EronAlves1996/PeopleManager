@@ -64,6 +64,9 @@ public class Person {
     }
 
     public void addAdress(Address address) {
+        if(address.isMainAddress()){
+            this.address.forEach(item -> item.setMainAddress(false));
+        }
         this.address.add(address);
     }
 
