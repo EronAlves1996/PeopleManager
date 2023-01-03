@@ -142,4 +142,13 @@ public class PersonServiceUnitTest {
         assertEquals("Lugar nenhum", adressesAsMain.get(0).getCity());
     }
 
+    @Test
+    public void seeAllAddressByPerson() throws Exception{
+        createTwoAddresses_whenSettingTheTwoForMain_thenTheLastCreatedIsTheMain();
+        List<Address> adresses = service.getPersonsAdressByPersonId(1);
+        assertEquals(2, adresses.size());
+    }
+
+    @Test
+
 }
