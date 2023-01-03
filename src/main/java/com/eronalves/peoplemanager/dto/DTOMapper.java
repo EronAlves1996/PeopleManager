@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.eronalves.peoplemanager.exceptions.DateFormatException;
+import com.eronalves.peoplemanager.model.Address;
 import com.eronalves.peoplemanager.model.Person;;
 
 public class DTOMapper {
@@ -27,6 +28,12 @@ public class DTOMapper {
             throw new DateFormatException("Invalid Date Format, please send in DD/MM/YYYY format");
         }
 
+    }
+
+    public static Address dtoToAddress(AddressDTO addressDTO) {
+        Address address = new Address(addressDTO.getStreetName(), addressDTO.getZipCode(),
+                addressDTO.getAddressNumber(), addressDTO.getCity(), addressDTO.isMainAddress());
+        return address;
     }
 
 }
