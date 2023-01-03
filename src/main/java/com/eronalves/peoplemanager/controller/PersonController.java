@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eronalves.peoplemanager.dto.AddressDTO;
 import com.eronalves.peoplemanager.dto.DTOMapper;
 import com.eronalves.peoplemanager.dto.PersonDTO;
+import com.eronalves.peoplemanager.model.Address;
 import com.eronalves.peoplemanager.model.Person;
 import com.eronalves.peoplemanager.service.PersonService;
 
@@ -66,6 +68,21 @@ public class PersonController {
     public ResponseEntity<List<Person>> getAllPersons() {
         List<Person> allPersons = service.getAllPersons();
         return ResponseEntity.ok(allPersons);
+    }
+
+    @PostMapping("/address/add/{id}")
+    public ResponseEntity<List<Address>> addAddressForPerson(@PathVariable("id") int id,
+            @RequestBody AddressDTO addressDTO) {
+        try {
+            Person person = service.createAddressForPersonById(id, DTOMapper.dtoToAddress(addressDTO));
+            return ResponseEntity.ok(person.getAdresses());
+        } catch (Exception ex) {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    public ResponseEntity<List<Address>> getAllAddressFromPerson(int i) {
     }
 
 }
