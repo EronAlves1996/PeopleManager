@@ -25,8 +25,15 @@ public class PersonController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Person> createPerson(@RequestBody PersonDTO personDTO) {
-        Person personCreated = service.createPerson(DTOMapper.dtoToPerson(personDTO));
+    public ResponseEntity<Object> createPerson(@RequestBody PersonDTO personDTO) {
+        Person personCreated = null;
+        try {
+            personCreated = service.createPerson(DTOMapper.dtoToPerson(personDTO));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(new Object() {
+                public String msg = ex.getMessage();
+            });
+        }
         BodyBuilder response = ResponseEntity.created(URI.create("/person/" + personCreated.getId()));
         return response.body(personCreated);
     }
