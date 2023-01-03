@@ -118,4 +118,45 @@ public class PeopleManagerIntegrationTest {
                 .andExpect(jsonPath("$[0].streetName").value(addressDTO.getStreetName()));
     }
 
+    @Test
+    public void testGetAdresses() throws JsonProcessingException, Exception {
+        PersonDTO personDTO = new PersonDTO("Eron Alves", "01/10/1996");
+        mockMvc.perform(post("/person/create").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(personDTO)));
+
+        AddressDTO addressDTO = new AddressDTO("Rua dos Bobos", "10000-000", "0", "Lugar Nenhum", true);
+        AddressDTO addressDTO2 = new AddressDTO("Rua dos Malandros", "10000-001", "2", "Lugar Nenhum", false);
+
+        mockMvc.perform(post("/person/address/add/1").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(addressDTO)));
+        mockMvc.perform(post("/person/address/add/1").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(addressDTO2)));
+
+        mockMvc.perform(get("/person/address/1")).andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(Matchers.hasSize(2)))
+                .andExpect(jsonPath("$[0].streetName").value(addressDTO.getStreetName()))
+                .andExpect(jsonPath("$[1].streetName").value(addressDTO2.getStreetName()));
+    }
+
+    @Test
+    public void testGetMainAddress() throws JsonProcessingException, Exception {
+        PersonDTO personDTO = new PersonDTO("Eron Alves", "01/10/1996");
+        mockMvc.perform(post("/person/create").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(personDTO)));
+
+        AddressDTO addressDTO = new AddressDTO("Rua dos Bobos", "10000-000", "0", "Lugar Nenhum", true);
+        AddressDTO addressDTO2 = new AddressDTO("Rua dos Malandros", "10000-001", "2", "Lugar Nenhum", false);
+
+        mockMvc.perform(post("/person/address/add/1").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(addressDTO)));
+        mockMvc.perform(post("/person/address/add/1").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(addressDTO2)));
+
+        mockMvc.perform(get("/person/address/main/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("streetName").value(addressDTO.getStreetName()))
+                .andExpect(jsonPath("mainAddress").value(true));
+    }
+
 }
