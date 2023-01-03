@@ -82,5 +82,35 @@ public class Address {
                 + addressNumber + ", city=" + city + ", mainAddress=" + mainAddress + "]";
     }
 
-    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((streetName == null) ? 0 : streetName.hashCode());
+        result = prime * result + ((addressNumber == null) ? 0 : addressNumber.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Address other = (Address) obj;
+        if (streetName == null) {
+            if (other.streetName != null)
+                return false;
+        } else if (!streetName.equals(other.streetName))
+            return false;
+        if (addressNumber == null) {
+            if (other.addressNumber != null)
+                return false;
+        } else if (!addressNumber.equals(other.addressNumber))
+            return false;
+        return true;
+    }
+
 }
