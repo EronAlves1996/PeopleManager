@@ -1,5 +1,6 @@
 package com.eronalves.peoplemanager;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -17,6 +18,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.eronalves.peoplemanager.dto.AddressDTO;
 import com.eronalves.peoplemanager.dto.DTOMapper;
 import com.eronalves.peoplemanager.dto.PersonDTO;
 import com.eronalves.peoplemanager.model.Person;
@@ -68,6 +70,52 @@ public class PeopleManagerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value("1"))
                 .andExpect(jsonPath("birthDate").value("1996-10-02"));
+    }
+
+    @Test
+    public void testReadPerson() throws JsonProcessingException, Exception {
+        PersonDTO personDTO = new PersonDTO("Eron Alves", "01/10/1996");
+        mockMvc.perform(post("/person/create").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(personDTO)));
+
+        mockMvc.perform(get("/person/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value("1"))
+                .andExpect(jsonPath("name").value(personDTO.getName()))
+                .andExpect(jsonPath("birthDate").value("1996-10-01"))
+                .andExpect(jsonPath("adresses").value(Matchers.empty()));
+
+    }
+
+    @Test
+    public void testReadAllPersons() throws JsonProcessingException, Exception {
+        PersonDTO personDTO = new PersonDTO("Eron Alves", "01/10/1996");
+        PersonDTO personDTO2 = new PersonDTO("João da Silva", "02/10/1998");
+
+        mockMvc.perform(post("/person/create").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(personDTO)));
+        mockMvc.perform(post("/person/create").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(personDTO2)));
+
+        mockMvc.perform(get("/person"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(Matchers.hasSize(2)))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[1].id").value(2));
+    }
+
+    @Test
+    public void testCreateAddress() throws JsonProcessingException, Exception {
+        PersonDTO personDTO = new PersonDTO("Eron Alves", "01/10/1996");
+        mockMvc.perform(post("/person/create").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(personDTO)));
+
+        AddressDTO addressDTO = new AddressDTO("Rua dos Bobos", "10000-000", "0", "Lugar Nenhum", true);
+        mockMvc.perform(post("/person/address/add/1").contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(addressDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].streetName").value(addressDTO.getStreetName()));
     }
 
 }
