@@ -1,23 +1,47 @@
 package com.eronalves.peoplemanager.model;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-@Embeddable
+@Entity
 public class Address {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String streetName;
     private String zipCode;
     private String addressNumber;
     private String city;
+    private boolean mainAddress;
 
-    public Address(String streetName, String zipCode, String addressNumber, String city) {
+    public Address(String streetName, String zipCode, String addressNumber, String city, boolean mainAddress) {
         this.streetName = streetName;
         this.zipCode = zipCode;
         this.addressNumber = addressNumber;
         this.city = city;
+        this.mainAddress = mainAddress;
     }
 
     public Address() {
+    }
+
+    public boolean isMainAddress() {
+        return mainAddress;
+    }
+
+    public void setMainAddress(boolean mainAddress) {
+        this.mainAddress = mainAddress;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getStreetName() {
@@ -52,7 +76,11 @@ public class Address {
         this.city = city;
     }
 
-    
+    @Override
+    public String toString() {
+        return "Address [id=" + id + ", streetName=" + streetName + ", zipCode=" + zipCode + ", addressNumber="
+                + addressNumber + ", city=" + city + ", mainAddress=" + mainAddress + "]";
+    }
 
     
 }

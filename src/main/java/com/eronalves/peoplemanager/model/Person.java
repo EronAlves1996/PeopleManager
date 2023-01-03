@@ -1,13 +1,16 @@
 package com.eronalves.peoplemanager.model;
 
 import java.time.LocalDate;
-import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.Embedded;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
@@ -22,15 +25,15 @@ public class Person {
     @Temporal(TemporalType.DATE)
     private LocalDate birthDate;
 
-    @Embedded
-    private Address adress;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "person_id")
+    private List<Address> address;
 
     public Person(String name, LocalDate birthDate) {
         this.name = name;
         this.birthDate = birthDate;
+        this.address = new ArrayList<>();
     }
-
-    public Person(){}
 
     public Integer getId() {
         return id;
@@ -52,16 +55,16 @@ public class Person {
         return birthDate;
     }
 
-    public void setBirthDate(int year, Month month, int day) {
-        this.birthDate = LocalDate.of(year, month, day);
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
-    public Address getAdress() {
-        return adress;
+    public List<Address> getAdresses() {
+        return address;
     }
 
-    public void setAdress(Address adress) {
-        this.adress = adress;
+    public void addAdress(Address address) {
+        this.address.add(address);
     }
 
     @Override
@@ -87,10 +90,6 @@ public class Person {
         } else if (!id.equals(other.id))
             return false;
         return true;
-    }
-
-    
-
-    
+    } 
 }
 
