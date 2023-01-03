@@ -1,6 +1,7 @@
 package com.eronalves.peoplemanager.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
@@ -59,6 +60,12 @@ public class PersonController {
         } catch (Exception ex) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Person>> getAllPersons() {
+        List<Person> allPersons = service.getAllPersons();
+        return ResponseEntity.ok(allPersons);
     }
 
 }
