@@ -82,7 +82,23 @@ public class PersonController {
 
     }
 
-    public ResponseEntity<List<Address>> getAllAddressFromPerson(int i) {
+    @GetMapping("/address/{id}")
+    public ResponseEntity<List<Address>> getAllAddressFromPerson(@PathVariable("id") int id) throws Exception {
+        try {
+            List<Address> addresses = service.getPersonsAdressByPersonId(id);
+            return ResponseEntity.ok(addresses);
+        } catch (Exception ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<Address> getMainAddressBypersonId(int id) {
+        try {
+            Address mainAddressByPersonId = service.getMainAddressByPersonId(id);
+            return ResponseEntity.ok(mainAddressByPersonId);
+        } catch (Exception ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
