@@ -35,6 +35,9 @@ public class Person {
         this.address = new ArrayList<>();
     }
 
+    public Person() {
+    }
+
     public Integer getId() {
         return id;
     }
@@ -64,7 +67,7 @@ public class Person {
     }
 
     public void addAdress(Address address) {
-        if(address.isMainAddress()){
+        if (address.isMainAddress()) {
             this.address.forEach(item -> item.setMainAddress(false));
         }
         this.address.add(address);
@@ -93,6 +96,5 @@ public class Person {
         } else if (!id.equals(other.id))
             return false;
         return true;
-    } 
+    }
 }
-
