@@ -48,12 +48,20 @@ public class PersonControllerUnitTest {
     public void testCreatePerson() {
         when(service.createPerson(DTOMapper.dtoToPerson(personDTO))).thenReturn(person);
         
-        ResponseEntity<Person> response = controller.createPerson(personDTO);
+        ResponseEntity<Object> response = controller.createPerson(personDTO);
         assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
 
-        Person person = response.getBody();
+        Person person = (Person) response.getBody();
         assertNotNull(person);
         assertNotNull(person.getId());
         assertEquals(0, person.getAdresses().size());
     }
+
+    @Test
+    public void testCreatePersonWithInvalidDate() {
+        PersonDTO personDTO2 = new PersonDTO("Eron Alves", "10 10 1995");
+        ResponseEntity<Object> response = controller.createPerson(personDTO2);
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+    }
+
 }
