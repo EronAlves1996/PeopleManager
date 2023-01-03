@@ -12,6 +12,7 @@ import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -123,6 +124,22 @@ public class PersonServiceUnitTest {
     @Test
     public void createAddressForPersonById_whenItNotExists_thenThrowException() {
         assertThrows(Exception.class, ()->service.createAddressForPersonById(2, address));        
+    }
+
+    @Test
+    public void createTwoAddresses_whenSettingTheTwoForMain_thenTheLastCreatedIsTheMain() throws Exception{
+        createAddressForPersonById();
+        Address address2 = new Address("Rua dois", "11111-111", "26", "Lugar nenhum",true);
+        Person person = service.createAddressForPersonById(1, address2);
+
+        List<Address> adressesAsMain = person
+            .getAdresses()
+            .stream()
+            .filter(address -> address.isMainAddress())
+            .collect(Collectors.toList());
+
+        assertEquals(1,adressesAsMain.size());
+        assertEquals("Lugar nenhum", adressesAsMain.get(0).getCity());
     }
 
 }
