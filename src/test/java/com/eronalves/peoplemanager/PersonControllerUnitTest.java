@@ -77,4 +77,14 @@ public class PersonControllerUnitTest {
         assertNotNull(personUpdated);
     }
 
+    @Test
+    public void testGetPerson() throws Exception{
+        when(service.getPersonById(1)).thenReturn(person);
+        ResponseEntity<Person> response = controller.getPerson(1);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        Person person = response.getBody();
+        assertNotNull(person);
+        assertEquals(1, person.getId());
+    }
+
 }
