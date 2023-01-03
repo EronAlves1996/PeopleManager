@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,6 +46,16 @@ public class PersonController {
         try {
             Person personUpdated = service.updatePersonById(id, DTOMapper.dtoToPerson(personDTO));
             return ResponseEntity.ok(personUpdated);
+        } catch (Exception ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Person> getPerson(@PathVariable("id") int id) {
+        try {
+            Person person = service.getPersonById(id);
+            return ResponseEntity.ok(person);
         } catch (Exception ex) {
             return ResponseEntity.notFound().build();
         }
