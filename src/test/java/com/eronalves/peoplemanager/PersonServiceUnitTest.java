@@ -33,12 +33,22 @@ public class PersonServiceUnitTest {
 	PersonService service;
 	private Person personTested;
 	private Person person;
+    private Address address;
 
 	@BeforeEach
 	public void initializePersons() {
 		personTested = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
 		personTested.setId(1);
 		person = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
+	}
+    
+    @BeforeEach
+    public void initializeAddress(){
+        address = new Address("Rua dos bobos", "10000-000", "0", "Esmero", true);
+    }
+    
+    @BeforeEach
+    public void makeMocks(){
         when(repository.save(any())).thenReturn(personTested);
         when(repository.findById(1)).thenReturn(Optional.of(personTested));
         when(repository.findAll()).thenReturn(Arrays.asList(personTested));
