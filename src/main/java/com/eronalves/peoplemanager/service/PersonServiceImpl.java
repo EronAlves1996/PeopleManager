@@ -1,5 +1,7 @@
 package com.eronalves.peoplemanager.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -37,6 +39,14 @@ public class PersonServiceImpl implements PersonService {
         Optional<Person> personOpt = repository.findById(id);
         if(personOpt.isPresent()) return personOpt.get();
         throw new Exception("Person not finded");
+    }
+
+    @Override
+    public List<Person> getAllPersons() {
+        Iterable<Person> personIterable = repository.findAll();
+        ArrayList<Person> personList = new ArrayList<Person>();
+        personIterable.forEach(personList::add);
+        return personList;
     }
 
 }
