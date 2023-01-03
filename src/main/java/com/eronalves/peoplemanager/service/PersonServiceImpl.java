@@ -28,19 +28,23 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person updatePersonById(int id, Person person) throws Exception {
-        if(person.getId() == null) person.setId(id);
-        if(person.getId() != id) throw new Exception(INCONSISTENT_ID_MSG);
-        return persistOnDatabase(person);
+        if (person.getId() == null)
+            person.setId(id);
+        if (person.getId() != id)
+            throw new Exception(INCONSISTENT_ID_MSG);
+        if (repository.existsById(id))
+            return persistOnDatabase(person);
+        throw new Exception(PERSON_NOT_FINDED_MSG);
     }
 
-    
     @Override
     public Person getPersonById(int id) throws Exception {
         Optional<Person> personOpt = repository.findById(id);
-        if(personOpt.isPresent()) return personOpt.get();
+        if (personOpt.isPresent())
+            return personOpt.get();
         throw new Exception(PERSON_NOT_FINDED_MSG);
     }
-    
+
     @Override
     public List<Person> getAllPersons() {
         Iterable<Person> personIterable = repository.findAll();
@@ -48,8 +52,8 @@ public class PersonServiceImpl implements PersonService {
         personIterable.forEach(personList::add);
         return personList;
     }
-    
-    private Person persistOnDatabase(Person person){
+
+    private Person persistOnDatabase(Person person) {
         return repository.save(person);
     }
 
