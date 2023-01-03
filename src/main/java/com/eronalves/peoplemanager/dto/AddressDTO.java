@@ -16,6 +16,9 @@ public class AddressDTO {
         this.mainAddress = mainAddress;
     }
 
+    public AddressDTO() {
+    }
+
     public String getStreetName() {
         return streetName;
     }
