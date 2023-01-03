@@ -45,7 +45,7 @@ public class PersonController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Person> updatePerson(@PathVariable("/id") int id, @RequestBody PersonDTO personDTO) {
+    public ResponseEntity<Person> updatePerson(@PathVariable("id") int id, @RequestBody PersonDTO personDTO) {
         try {
             Person personUpdated = service.updatePersonById(id, DTOMapper.dtoToPerson(personDTO));
             return ResponseEntity.ok(personUpdated);
