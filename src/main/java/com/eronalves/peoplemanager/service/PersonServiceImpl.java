@@ -64,4 +64,9 @@ public class PersonServiceImpl implements PersonService {
     public List<Address> getPersonsAdressByPersonId(int id) throws Exception {
         return getPersonById(id).getAdresses();
     }
+
+    @Override
+    public Address getMainAddressByPersonId(int id) throws Exception {
+        return getPersonsAdressByPersonId(id).stream().filter(address -> address.isMainAddress()).findFirst().get();
+    }
 }

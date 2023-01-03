@@ -18,4 +18,6 @@ public interface PersonService {
     Person createAddressForPersonById(int id, Address address) throws Exception;
 
     List<Address> getPersonsAdressByPersonId(int id) throws Exception;
+
+    Address getMainAddressByPersonId(int id) throws Exception;
 }
