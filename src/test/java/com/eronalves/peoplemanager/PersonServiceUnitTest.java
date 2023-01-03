@@ -5,12 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +41,7 @@ public class PersonServiceUnitTest {
 		person = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
         when(repository.save(any())).thenReturn(personTested);
         when(repository.findById(1)).thenReturn(Optional.of(personTested));
+        when(repository.findAll()).thenReturn(Arrays.asList(personTested));
 	}
 
 	@Test
@@ -92,6 +93,11 @@ public class PersonServiceUnitTest {
     @Test
     public void getPersonById_whenItNotExists() throws Exception{
         assertThrows(Exception.class, ()->service.getPersonById(2));
+    }
+
+    @Test
+    public void getAllPersons(){
+        assertEquals(Arrays.asList(personTested), service.getAllPersons());
     }
 
 }
