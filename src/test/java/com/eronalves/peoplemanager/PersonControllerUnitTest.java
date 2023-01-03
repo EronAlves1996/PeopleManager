@@ -1,11 +1,14 @@
 package com.eronalves.peoplemanager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,6 +88,18 @@ public class PersonControllerUnitTest {
         Person person = response.getBody();
         assertNotNull(person);
         assertEquals(1, person.getId());
+    }
+
+    @Test
+    public void testGetAllPersons() {
+        when(service.getAllPersons()).thenReturn(Arrays.asList(person));
+
+        ResponseEntity<List<Person>> response = controller.getAllPersons();
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        List<Person> persons = response.getBody();
+
+        assertNotEquals(0, persons.size());
     }
 
 }
