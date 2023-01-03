@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.eronalves.peoplemanager.model.Address;
 import com.eronalves.peoplemanager.model.Person;
 import com.eronalves.peoplemanager.repositories.PersonRepository;
 
@@ -50,5 +51,12 @@ public class PersonServiceImpl implements PersonService {
     
     private Person persistOnDatabase(Person person){
         return repository.save(person);
+    }
+
+    @Override
+    public Person createAddressForPersonById(int id, Address address) throws Exception {
+        Person person = getPersonById(id);
+        person.addAdress(address);
+        return updatePersonById(id, person);
     }
 }
