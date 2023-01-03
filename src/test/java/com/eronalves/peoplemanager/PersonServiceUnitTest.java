@@ -3,7 +3,6 @@ package com.eronalves.peoplemanager;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -11,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.eronalves.peoplemanager.model.Address;
 import com.eronalves.peoplemanager.model.Person;
 import com.eronalves.peoplemanager.repositories.PersonRepository;
 import com.eronalves.peoplemanager.service.PersonService;
@@ -28,18 +29,18 @@ public class PersonServiceUnitTest {
 
 	@MockBean
 	PersonRepository repository;
-
+    
 	@Autowired
 	PersonService service;
 	private Person personTested;
 	private Person person;
     private Address address;
-
+    
 	@BeforeEach
 	public void initializePersons() {
-		personTested = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
+        personTested = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
 		personTested.setId(1);
-		person = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
+        person = new Person("Eron", LocalDate.of(1996, Month.OCTOBER, 01));
 	}
     
     @BeforeEach
@@ -52,7 +53,7 @@ public class PersonServiceUnitTest {
         when(repository.save(any())).thenReturn(personTested);
         when(repository.findById(1)).thenReturn(Optional.of(personTested));
         when(repository.findAll()).thenReturn(Arrays.asList(personTested));
-	}
+    }
 
 	@Test
 	public void createPerson() {
@@ -60,7 +61,7 @@ public class PersonServiceUnitTest {
 
 		assertNotNull(personCreated.getId());
 		assertEquals(LocalDate.of(1996, Month.OCTOBER, 01), person.getBirthDate());
-		assertNull(personCreated.getAdress());
+		assertEquals(0, personCreated.getAdresses().size());
 	}
 
 	@Test
@@ -108,6 +109,20 @@ public class PersonServiceUnitTest {
     @Test
     public void getAllPersons(){
         assertEquals(Arrays.asList(personTested), service.getAllPersons());
+    }
+
+    @Test
+    public void createAddressForPersonById() throws Exception{
+        Person person = service.createAddressForPersonById(1, address);
+        List<Address> addressCreated = person.getAdresses();
+        assertNotNull(addressCreated);
+        assertEquals(1, addressCreated.size());
+        assertEquals("Rua dos bobos", addressCreated.get(0).getStreetName());
+    }
+
+    @Test
+    public void createAddressForPersonById_whenItNotExists_thenThrowException() {
+        assertThrows(Exception.class, ()->service.createAddressForPersonById(2, address));        
     }
 
 }
