@@ -123,7 +123,31 @@ public class PersonControllerUnitTest {
     @Test
     public void testGetAllAdressesFromPersonId() throws Exception {
         testAddAddressByPersonId();
+        when(service.getPersonsAdressByPersonId(1)).thenReturn(person.getAdresses());
+
         ResponseEntity<List<Address>> response = controller.getAllAddressFromPerson(1);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        List<Address> addresses = response.getBody();
+
+        assertNotNull(addresses);
+        assertEquals(1, addresses.size());
+    }
+
+    @Test
+    public void testGetMainAddressByPersonId() throws Exception {
+        testAddAddressByPersonId();
+        AddressDTO addressDTO = new AddressDTO("Rua dos macetes", "00000-000", "0", "Lugar Nenhum", true);
+        Address newMainAddress = DTOMapper.dtoToAddress(addressDTO);
+        person.addAdress(newMainAddress);
+
+        when(service.getMainAddressByPersonId(1)).thenReturn(newMainAddress);
+        ResponseEntity<Address> response = controller.getMainAddressBypersonId(1);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        Address address = response.getBody();
+        assertNotNull(address);
+        assertEquals("Rua dos macetes", address.getStreetName());
     }
 
 }
