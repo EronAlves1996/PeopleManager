@@ -4,7 +4,9 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +38,16 @@ public class PersonController {
         }
         BodyBuilder response = ResponseEntity.created(URI.create("/person/" + personCreated.getId()));
         return response.body(personCreated);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Person> updatePerson(@PathVariable("/id") int id, @RequestBody PersonDTO personDTO) {
+        try {
+            Person personUpdated = service.updatePersonById(id, DTOMapper.dtoToPerson(personDTO));
+            return ResponseEntity.ok(personUpdated);
+        } catch (Exception ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
