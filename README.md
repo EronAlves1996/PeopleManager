@@ -20,7 +20,7 @@ Todo o projeto foi gerado através do spring boot
 - **GET /person/adress/{id}** = Lê os endereços de uma pessoa pelo seu id
 - **GET /person/adress/main/{id}** = Lê o endereço principal de uma pessoa pelo seu id
 
-A API também está acessível pelo endereço , além de ter uma especificação básica conforme OpenAPI no endereço.
+A API também está acessível pelo endereço http://152.67.47.73:8080/, além de ter uma especificação básica conforme OpenAPI no endereço http://152.67.47.73:8080/swagger-ui/index.html para visualização e experimentação fácil, rápida e prática.
 
 ## Rodando a aplicação
 
